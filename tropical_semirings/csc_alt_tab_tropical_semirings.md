@@ -36,7 +36,7 @@ logo: csc.png
 
 :::
 
-# The essence of the path algorithm
+# The Essence of the Path Algorithm
 
 ## Dijkstra's Shortest Path Algorithm
 
@@ -67,18 +67,18 @@ logo: csc.png
 \normalsize
 :::
 \pause
-- Very classic, but:
-  - Uses lots of state and mutation
+- Very classic, but:\pause
+  - Uses lots of state and mutation\pause
   - Hard to tell what's going on from just reading the code
 
 ::: notes
 
-- Q: read
+- Q: (read)
 - (next, then read)
 - Everyone love's Dijkstra's
 - Set up priority queue, put things into it, take things out of it, stop 
   iterating based on it
-- (next, then read)
+- (next, then read about classic but next x 2)
 - It's a very imperative algorithm
 - CS 341 shows a few other graph path algorithms
   - from that you'd think they're all inherently imperative
@@ -114,8 +114,6 @@ logo: csc.png
 
 ## A Functional Kernel
 
-- The original calculates, then compares, then (sometimes) sets
-
 ::: {.block}
 ### Original Pseudocode
 \tiny
@@ -127,7 +125,9 @@ logo: csc.png
 \normalsize
 :::
 
-- The comparison+set can be written as a single function call
+\pause
+- The original calculates, then compares, then (sometimes) sets\pause
+- The comparison+set can be written as a single function call\pause
 
 ::: {.block2}
 ### Refined pseudocode
@@ -139,6 +139,37 @@ dist[v] <- min(dist[v], dist[u] + Graph.Edges(u, v))
 \normalsize
 :::
 
+\pause
 - This is the core of path algorithms!
-- Remember this for later
 
+# The Algebra of the Path Algorithm
+
+## The Algebra of the Path Algorithm
+
+::: {.block}
+### Essence of the path algorithm
+
+\tiny
+```algol
+dist[v] <- min(dist[v], dist[u] + Graph.Edges(u, v))
+```
+\normalsize
+:::
+
+\pause
+- There are only two operations here: `min` and $+$\pause
+- Q: What algebraic structures have two operations?\pause
+- A: Rings, fields, and related structures\pause
+- Let's define a ring-like structure $(R, +, \cdot)$ such that:\pause
+  - The underlying set $R$ is $\mathbb{R}$\pause
+  - The "addition" operation $+$ is the function `min` that takes the minimum of 
+    it's two arguments\pause
+  - The "multiplication" operation $\cdot$ is the usual addition on reals\pause
+
+::: {.block2}
+### Essence of the path algorithm, algebraically
+
+$$ dist[v] = dist[v] + dist[u] \cdot Graph.Edges(u, v) $$
+:::
+
+## What Structure do we Have?
