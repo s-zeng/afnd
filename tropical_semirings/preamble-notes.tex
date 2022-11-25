@@ -1,0 +1,10 @@
+\setbeameroption{show only notes}
+\setbeamertemplate{navigation symbols}{} 
+\setbeamertemplate{footline}[frame number]
+
+\makeatletter
+\def\beamer@framenotesbegin{%
+  \gdef\beamer@noteitems{}%
+  \gdef\beamer@notes{{}}%
+}
+

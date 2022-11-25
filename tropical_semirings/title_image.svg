@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   width="354.33069"
+   height="354.33069"
+   id="svg2">
+  <metadata
+     id="metadata32">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs30" />
+  <rect
+     width="355"
+     height="355"
+     x="-355"
+     y="-355"
+     transform="scale(-1,-1)"
+     id="rect4"
+     style="fill:#f5fffa" />
+  <g
+     transform="matrix(-1,0,0,-1,354.33071,354.33066)"
+     id="g6"
+     style="fill:none;stroke:#000000;stroke-width:3.54330707;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none">
+    <path
+       d="m 88.582677,159.4488 0,88.58268 35.433073,0 88.58268,-88.58268 0,-53.14961 -70.86615,0 z"
+       id="path8" />
+    <path
+       d="m 88.582677,159.4488 -70.866142,0"
+       id="path10" />
+    <path
+       d="m 124.01575,248.03148 0,88.58267"
+       id="path12" />
+    <path
+       d="M 212.59843,106.29919 301.1811,17.716515"
+       id="path14" />
+    <path
+       d="m 88.582677,248.03148 -35.433071,35.43307 0,53.1496"
+       id="path16" />
+    <path
+       d="m 141.73228,106.29919 0,-35.433068 -124.015745,0"
+       id="path18" />
+    <path
+       d="m 53.149606,283.46455 -35.433071,0"
+       id="path20" />
+    <path
+       d="M 141.73228,70.866122 194.88189,17.716515"
+       id="path22" />
+    <path
+       d="m 212.59843,159.4488 70.86614,0 53.1496,-53.14961"
+       id="path24" />
+    <path
+       d="m 283.46457,159.4488 0,177.16535"
+       id="path26" />
+  </g>
+</svg>
