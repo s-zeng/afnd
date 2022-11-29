@@ -5,10 +5,11 @@ author: Simon Zeng
 date: \today
 theme: Frankfurt
 titlegraphic: title_image.png
-slide-level: 2
 section-titles: false
+slide-level: 2
 institute: UWCSC
 logo: csc.png
+aspectratio: 54
 ---
 
 ## Handout
@@ -24,7 +25,7 @@ logo: csc.png
 ::: notes
 
 - Greeting
-- Functional programming talk
+- Spoiler: Functional programming talk
   - Not lambda
   - Not purity
   - Not monads
@@ -36,140 +37,130 @@ logo: csc.png
 
 :::
 
-# The Essence of the Path Algorithm
+# Motivating problem
 
-## Dijkstra's Shortest Path Algorithm
+![Graph where edge weights represent **number of paths**](graph.dot.svg){height=50%}
 
-- Q: How do we traditionally get the shortest path between two nodes on a graph? \pause
-- A: *Dijkstra's algorithm*
+- Problem: find the number of paths between two nodes on a graph that traverses 
+  $n$ edges?
+- Example: there are 3 paths from 0 to 2 that traverse 1 edge
 
-::: {.block}
-### Pseudocode
+## Solving imperatively
 
-\tiny
-```algol
-01 function Dijkstra(Graph, source):
-02     dist[source] <- 0
-03     create vertex priority queue Q
-04     for each vertex v in Graph.Vertices:
-05         if v != source
-06             (dist[v], prev[v]) <- INFINITY, UNDEFINED
-07         Q.add_with_priority(v, dist[v])
-08     while Q is not empty:
-09         u <- Q.extract_min()
-10         for each neighbor v of u:
-11             alt <- dist[u] + Graph.Edges(u, v)
-12             if alt < dist[v]:
-13                 (dist[v], prev[v]) <- alt, u
-14                 Q.decrease_priority(v, alt)
-15     return dist, prev
-```
-\normalsize
-:::
-\pause
-- Very classic, but:\pause
-  - Uses lots of state and mutation\pause
-  - Hard to tell what's going on from just reading the code
+![The graph](graph.dot.svg){height=50%}
+
+- DFS, priority queue, etc
+- Works, but a bit painful
 
 ::: notes
 
-- Q: (read)
-- (next, then read)
-- Everyone love's Dijkstra's
-- Set up priority queue, put things into it, take things out of it, stop 
-  iterating based on it
-- (next, then read about classic but next x 2)
-- It's a very imperative algorithm
-- CS 341 shows a few other graph path algorithms
-  - from that you'd think they're all inherently imperative
-- But: graph problems are **not** inherently imperative!
-- Let's zoom in to the meat
+- Informally go over an imperative DFS
+- Do example with $n = 3$
 
 :::
 
-## Core of Dijkstra's Algorithm
+# Towards an elegant solution
 
-- When going from some node $u$ to some node $v$: \pause
-  - Get the best distance from source to $u$... \pause
-  - ...**add** the weight of the edge $uv$... \pause
-  - ...compare against existing best distance of $v$... \pause
-  - ... store the **minimum** between our number and what $v$ already has \pause
+![The graph](graph.dot.svg){height=50%}
+
+- Example: What exactly are we doing when we want to solve for paths between 0 
+  and 5 with $n=2$?
+- $Paths(0, 5) = 3\cdot 1 + 5\cdot 0 + 2\cdot 1 + 4\cdot 2 = 13$
+
+::: notes
+
+- What does this look like? A linear combination!
+- It's actually a dot product!
+
+:::
+
+## What does that look like?
+
+![The graph](graph.dot.svg){height=50%}
+
+### Solution for $n=4$ as a dot product
+
+$$Paths(0, 5) =(3, 5, 2, 4)\cdot (1, 0, 1, 2) = 13$$
+
+::: notes
+
+- Explain where the numbers come from
+
+:::
+
+## Expanding it out
+
+![The graph](graph.dot.svg){height=50%}
+
+- Actually, there are 0 paths of length 1 between two unconnected nodes, so the 
+  full dot product looks like:
+$$Paths(0, 5) = (0, 3, 5, 2, 4, 0, 0)\cdot (0, 1, 0, 1, 2, 0, 5) = 13$$
+
+::: notes
+
+- Explain where the numbers come from again, but with the 0s
+
+:::
+
+## The solution for $n=2$ is a dot product
 
 ::: {.block}
-### Pseudocode
+### Our previous exmple
 
-\tiny
-```algol
-11 alt <- dist[u] + Graph.Edges(u, v)
-12 if alt < dist[v]:
-13    dist[v] <- alt
-```
-\normalsize
+$$Paths(0, 5) = (0, 3, 5, 2, 4, 0, 0)\cdot (0, 1, 0, 1, 2, 0, 5) = 13$$
 :::
 
-\pause
-- The rest of Dijkstra's tells us only **when** we look at a particular 
-  node \pause
-- Dijkstra's is just node ordering boilerplate around this core operation
+- If the nodes are labelled $u, v, a, b, c, \cdots$ and edges between nodes $u$ 
+  and $v$ are labelled $e_{uv}$, then we have:
 
-## A Functional Kernel
+$$Paths(u, v) = (e_{ua}, e_{ub}, e_{uc}, \cdots)\cdot (e_{av}, e_{bv}, e_{cv}, 
+\cdots,)$$
 
-::: {.block}
-### Original Pseudocode
-\tiny
-```algol
-11 alt <- dist[u] + Graph.Edges(u, v)
-12 if alt < dist[v]:
-13    dist[v] <- alt
-```
-\normalsize
+- The first vector is all the edges that start at $u$
+- The second vector is the edges that end at $v$
+
+::: notes
+
+So if the answer is just dot products, what if we want to calculate the number 
+of paths between two nodes for the entire graph at once?
+
+A bunch of dot products??? What's that called?
+
+It's a matrix product!
 :::
 
-\pause
-- The original calculates, then compares, then (sometimes) sets\pause
-- The comparison+set can be written as a single function call\pause
+## A global answer
 
-::: {.block2}
-### Refined pseudocode
+![The graph](graph.dot.svg){height=25%}
 
-\tiny
-```algol
-dist[v] <- min(dist[v], dist[u] + Graph.Edges(u, v))
-```
-\normalsize
-:::
+- Consider the adjacency matrix of the graph:
+$$\begin{bmatrix}
+  0 & 3 & 5 & 2 & 4 & 0 & 0 \\
+  3 & 0 & 0 & 0 & 0 & 1 & 4 \\
+  5 & 0 & 0 & 0 & 0 & 0 & 0 \\
+  2 & 0 & 0 & 0 & 0 & 1 & 0 \\
+  4 & 0 & 0 & 0 & 0 & 2 & 0 \\
+  0 & 1 & 0 & 1 & 2 & 0 & 5 \\
+  0 & 4 & 0 & 0 & 0 & 5 & 0 \\
+\end{bmatrix}
+$$
+- Do you spot the $Path(0, 5)$ dot product?
 
-\pause
-- This is the core of path algorithms!
 
-# The Algebra of the Path Algorithm
 
-## The Algebra of the Path Algorithm
+# A different problem?
 
-::: {.block}
-### Essence of the path algorithm
+swapping semiring to shortest distance
 
-\tiny
-```algol
-dist[v] <- min(dist[v], dist[u] + Graph.Edges(u, v))
-```
-\normalsize
-:::
+# Get Closure
 
-\pause
-- There are only two operations here: `min` and $+$\pause
-- Q: What algebraic structures have two operations?\pause
-- A: Rings, fields, and related structures\pause
-- Let's define a ring-like structure $(R, +, \cdot)$ such that:\pause
-  - The underlying set $R$ is $\mathbb{R}$\pause
-  - The "addition" operation $+$ is the function `min` that takes the minimum of 
-    it's two arguments\pause
-  - The "multiplication" operation $\cdot$ is the usual addition on reals\pause
+introduce calculation of 1 + a + a^2 + a^3 + ...
 
-::: {.block2}
-### Essence of the path algorithm, algebraically
+# Choose your character
 
-$$ dist[v] = dist[v] + dist[u] \cdot Graph.Edges(u, v) $$
-:::
-
-## What Structure do we Have?
+- longest path
+- widest flow
+- dfa->regex
+- inverting matrices
+- determine graph is bipartite
+- reconstructing path

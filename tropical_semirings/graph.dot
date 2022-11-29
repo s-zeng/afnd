@@ -1,0 +1,21 @@
+graph sample {
+  rankdir="LR";
+  Node0;
+  Node2;
+  Node1;
+  Node3;
+  Node4;
+  Node5;
+  Node6;
+
+  Node0 -- Node2 [label="5"]
+  Node0 -- Node1 [label="3"]
+  Node0 -- Node3 [label="2"]
+  Node0 -- Node4 [label="4"]
+  Node2 -- Node5 [label="0"]
+  Node1 -- Node5 [label="1"]
+  Node3 -- Node5 [label="1"]
+  Node4 -- Node5 [label="2"]
+  Node1 -- Node6 [label="4"]
+  Node5 -- Node6 [label="5"]
+}
